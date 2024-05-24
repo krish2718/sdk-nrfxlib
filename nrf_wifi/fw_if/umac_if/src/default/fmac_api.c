@@ -2294,6 +2294,10 @@ enum nrf_wifi_status nrf_wifi_fmac_chg_vif_state(void *dev_ctx,
 	chg_vif_state_cmd->umac_hdr.ids.valid_fields |=
 		NRF_WIFI_INDEX_IDS_WDEV_ID_VALID;
 
+	nrf_wifi_osal_log_dbg(fmac_dev_ctx->fpriv->opriv,
+			      "%s: if_idx: %d, state: %d",
+			      __func__, if_idx, vif_info->state);
+
 	nrf_wifi_osal_mem_cpy(fmac_dev_ctx->fpriv->opriv,
 			      &chg_vif_state_cmd->info,
 			      vif_info,
