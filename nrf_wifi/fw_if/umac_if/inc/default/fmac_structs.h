@@ -139,7 +139,14 @@ struct nrf_wifi_fmac_callbk_fns {
 					  signed short signal);
 #endif /* CONFIG_WIFI_MGMT_RAW_SCAN_RESULTS */
 
-#if defined(CONFIG_NRF700X_STA_MODE) || defined(__DOXYGEN__)
+#if defined(CONFIG_NRF700X_SYSTEM_MODE) || defined(CONFIG_NRF700X_SYSTEM_WITH_RAW_MODES) || defined(__DOXYGEN__)
+	/** Callback function to be called when a set interface response is received. */
+	void (*set_if_callbk_fn)(void *os_vif_ctx,
+				 struct nrf_wifi_umac_event_set_interface *set_if_event,
+				 unsigned int event_len);
+#endif
+
+#if defined(CONFIG_NRF700X_DATA_TX) || defined(__DOXYGEN__)
 	/** Callback function to be called when an interface association state changes. */
 	enum nrf_wifi_status (*if_carr_state_chg_callbk_fn)(void *os_vif_ctx,
 							    enum nrf_wifi_fmac_if_carr_state cs);
@@ -197,11 +204,6 @@ struct nrf_wifi_fmac_callbk_fns {
 	void (*tx_status_callbk_fn)(void *os_vif_ctx,
 				    struct nrf_wifi_umac_event_mlme *tx_status_event,
 				    unsigned int event_len);
-
-	/** Callback function to be called when a set interface response is received. */
-	void (*set_if_callbk_fn)(void *os_vif_ctx,
-				 struct nrf_wifi_umac_event_set_interface *set_if_event,
-				 unsigned int event_len);
 
 	/** Callback function to be called when a remain on channel response is received. */
 	void (*roc_callbk_fn)(void *os_vif_ctx,
@@ -373,6 +375,10 @@ struct nrf_wifi_fmac_priv_def {
 	unsigned int rx_desc[MAX_NUM_OF_RX_QUEUES];
 	/** Maximum number of host buffers needed for RX frames. */
 	unsigned int num_rx_bufs;
+	/** Maximum supported AMPDU length per token. */
+	unsigned int max_ampdu_len_per_token;
+	/** Available (remaining) AMPDU length per token. */
+	unsigned int avail_ampdu_len_per_token;
 #if defined(CONFIG_NRF700X_STA_MODE)
 	/** Maximum number of tokens available for TX. */
 	unsigned char num_tx_tokens;
@@ -380,10 +386,6 @@ struct nrf_wifi_fmac_priv_def {
 	unsigned char num_tx_tokens_per_ac;
 	/** Number of spare tokens (common to all ACs) available for TX. */
 	unsigned char num_tx_tokens_spare;
-	/** Maximum supported AMPDU length per token. */
-	unsigned int max_ampdu_len_per_token;
-	/** Available (remaining) AMPDU length per token. */
-	unsigned int avail_ampdu_len_per_token;
 #endif /* CONFIG_NRF700X_STA_MODE */
 };
 
