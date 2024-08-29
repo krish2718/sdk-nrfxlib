@@ -607,6 +607,8 @@ static enum nrf_wifi_status hal_rpu_ready_wait(struct nrf_wifi_hal_dev_ctx *hal_
 					      msg_type);
 			goto out;
 		}
+		nrf_wifi_osal_sleep_ms(hal_dev_ctx->hpriv->opriv,
+				       1);
 	}
 
 	status = NRF_WIFI_STATUS_SUCCESS;
