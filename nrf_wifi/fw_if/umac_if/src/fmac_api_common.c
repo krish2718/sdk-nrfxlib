@@ -976,9 +976,13 @@ enum nrf_wifi_status nrf_wifi_fmac_get_reg(struct nrf_wifi_fmac_dev_ctx *fmac_de
 
 	reg_info->reg_chan_count = fmac_dev_ctx->reg_chan_count;
 
-	return NRF_WIFI_STATUS_SUCCESS;
+	status = NRF_WIFI_STATUS_SUCCESS;
 err:
-	return NRF_WIFI_STATUS_FAIL;
+	if (get_reg_cmd) {
+		nrf_wifi_osal_mem_free(fmac_dev_ctx->fpriv->opriv,
+				       get_reg_cmd);
+	}
+	return status;
 }
 
 int nrf_wifi_phy_rf_params_init(struct nrf_wifi_osal_priv *opriv,
