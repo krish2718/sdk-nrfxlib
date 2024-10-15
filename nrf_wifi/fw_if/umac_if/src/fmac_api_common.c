@@ -830,6 +830,7 @@ enum nrf_wifi_status nrf_wifi_fmac_set_reg(struct nrf_wifi_fmac_dev_ctx *fmac_de
 		set_reg_cmd->valid_fields |= NRF_WIFI_CMD_REQ_SET_REG_USER_REG_FORCE;
 	}
 
+	fmac_dev_ctx->reg_set_status = false;
 	status = umac_cmd_cfg(fmac_dev_ctx,
 			      set_reg_cmd,
 			      sizeof(*set_reg_cmd));
@@ -843,7 +844,6 @@ enum nrf_wifi_status nrf_wifi_fmac_set_reg(struct nrf_wifi_fmac_dev_ctx *fmac_de
 	nrf_wifi_osal_log_dbg(fmac_dev_ctx->fpriv->opriv,
 			       "%s: Waiting for regulatory domain change event",
 			       __func__);
-	fmac_dev_ctx->reg_set_status = false;
 	while (!fmac_dev_ctx->reg_set_status && count++ <= max_count) {
 		nrf_wifi_osal_sleep_ms(fmac_dev_ctx->fpriv->opriv,
 				       100);
