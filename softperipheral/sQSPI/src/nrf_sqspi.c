@@ -118,6 +118,12 @@ nrfx_err_t nrf_sqspi_init(const nrf_sqspi_t * p_qspi, const nrf_sqspi_cfg_t * p_
     NRFX_ASSERT(p_qspi);
     NRFX_ASSERT(p_config);
 
+#if defined (NRF54L20_ENGA_XXAA) || defined (NRF54LM20A_ENGA_XXAA)
+    NRF_EGU00->PUBLISH_TRIGGERED[1] = ((EGU_PUBLISH_TRIGGERED_EN_Enabled << EGU_PUBLISH_TRIGGERED_EN_Pos) & EGU_PUBLISH_TRIGGERED_EN_Msk) | 1;
+    NRF_EGU00->PUBLISH_TRIGGERED[2] = ((EGU_PUBLISH_TRIGGERED_EN_Enabled << EGU_PUBLISH_TRIGGERED_EN_Pos) & EGU_PUBLISH_TRIGGERED_EN_Msk) | 2;
+    NRF_EGU00->PUBLISH_TRIGGERED[3] = ((EGU_PUBLISH_TRIGGERED_EN_Enabled << EGU_PUBLISH_TRIGGERED_EN_Pos) & EGU_PUBLISH_TRIGGERED_EN_Msk) | 3;
+    NRF_DPPIC00->CHENSET = DPPIC_CHEN_CH1_Msk | DPPIC_CHEN_CH2_Msk | DPPIC_CHEN_CH3_Msk;
+#endif
     qspi2_control_block_t * p_cb = &m_cb[p_qspi->drv_inst_idx];
 
     if (p_cb->state != NRFX_DRV_STATE_UNINITIALIZED)
